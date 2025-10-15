@@ -44,7 +44,7 @@ sh scripts/pile.sh
    - `input`: text prompt/question
    - `label`: 1 (for single-benchmark KDS; optional; defaults to 1)
 
-2. Run with Llama 3.1 Instruct 8B:
+2. Run with Llama 3.1 Instruct 8B (or any allowed model allowed in the codebase):
 ```
 python src/main.py \
   --data sad \
