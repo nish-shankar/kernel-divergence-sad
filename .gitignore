@@ -1,0 +1,15 @@
+token
+out/*
+wandb/
+
+# Local user data (do not commit)
+sad.csv
+*.jsonl
+*.json
+
+# Caches
+__pycache__/
+.cache/
+
+# OS files
+.DS_Store
