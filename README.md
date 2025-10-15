@@ -4,7 +4,7 @@ An altered implementation of ICML 2025 paper, "[How Contaminated Is Your Benchma
 
 ## Setup Environment
 ```
-git clone https://github.com/deeplearning-wisc/kernel-divergence-score.git
+git clone https://github.com/nish-shankar/kernel-divergence-sad.git
 cd kernel-divergence-score
 ```
 
