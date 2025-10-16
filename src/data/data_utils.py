@@ -3,6 +3,7 @@ from datasets import Dataset
 
 
 def load_data(args, tokenizer, model_name, split):
+    print(f"DEBUG: Loading dataset '{args.data}'")
     if args.data == 'truthful_qa':
         from data.truthful_qa import load_data as load_truthfulqa
         return load_truthfulqa(args, tokenizer, model_name, split=split)

@@ -2,7 +2,7 @@
 for c in $(seq 1.00 1.00 1.00); do
   CUDA_VISIBLE_DEVICES=0 python src/main.py \
     --data sad \
-    --model llama3.1 \
+    --model mistral \
     --target_num 1000 \
     --out_dir out/ \
     --contamination $c \
