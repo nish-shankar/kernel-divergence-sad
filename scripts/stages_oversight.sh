@@ -5,7 +5,7 @@
 
 # Define the model and dataset
 DATASET_NAME="stages_oversight"
-MODEL_NAME="llama3.1"  # Corresponds to 'meta-llama/Meta-Llama-3.1-8B-Instruct'
+MODEL_NAME="qwen2.5-0.5b"  # Corresponds to 'Qwen/Qwen2.5-0.5B-Instruct'
 TARGET_NUM_SAMPLES=2000  # Total samples from CSV file
 OUTPUT_DIR="out/${DATASET_NAME}_${MODEL_NAME}"
 
@@ -28,9 +28,9 @@ for c in $(seq 0.00 0.05 1.00); do
     --sgd \
     --lr 0.0001 \
     --seed 0 \
-    --batch_size 2 \
-    --inference_batch_size 8 \
-    --memory_for_model_activations_in_gb 8 \
+    --batch_size 4 \
+    --inference_batch_size 16 \
+    --memory_for_model_activations_in_gb 2 \
     --exp_name "${MODEL_NAME}_${DATASET_NAME}_${TARGET_NUM_SAMPLES}_train_${c}_sgd_seed0_KDS"
 done
 
