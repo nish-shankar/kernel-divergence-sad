@@ -16,6 +16,9 @@ def load_data(args, tokenizer, model_name, split):
     elif args.data == 'arxivtection':
         from data.arxivtection import load_data as load_arxivtection
         return load_arxivtection(args, tokenizer, model_name, split=split)
+    elif args.data == 'stages_oversight':
+        from data.stages_oversight import load_data as load_stages_oversight
+        return load_stages_oversight(args, tokenizer, model_name, split=split)
     elif args.data == 'sad':
         from data.sad import load_data as load_sad
         return load_sad(args, tokenizer, model_name, split=split)
