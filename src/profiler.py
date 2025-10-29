@@ -71,13 +71,19 @@ class Profiler(object):
         
         # for lidx in tqdm(pre_embs.keys()):
         #     print(lidx)
-        # Prepare Embeddings and Kernels 
-        pre_emb = pre_embs[32]
+        # Prepare Embeddings and Kernels (pick a valid layer for this model)
+        # Choose the last available hidden-state layer present in both dicts
+        common_layers = sorted(set(pre_embs.keys()).intersection(set(post_embs.keys())))
+        if len(common_layers) == 0:
+            raise ValueError("No common layers found between pre/post embeddings")
+        layer_idx = common_layers[-1]
+
+        pre_emb = pre_embs[layer_idx]
         if args.cpu_profiler:
             pre_emb = pre_emb.cpu()
         pre_emb_normed = pre_emb / torch.norm(pre_emb, dim=1, keepdim=True)
 
-        post_emb = post_embs[32]
+        post_emb = post_embs[layer_idx]
         if args.cpu_profiler:
             post_emb = post_emb.cpu()
         post_emb_normed = post_emb / torch.norm(post_emb, dim=1, keepdim=True)
