@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Usage:
+#   bash scripts/run_on_runpod.sh [model] [dataset] [target_num] [split]
+# Defaults:
+#   model=qwen2.5-1.5b, dataset=stages_oversight, target_num=2000, split=train
+
+MODEL="${1:-qwen2.5-1.5b}"
+DATASET="${2:-stages_oversight}"
+TARGET_NUM="${3:-2000}"
+SPLIT="${4:-train}"
+
+# Ensure we are at repo root
+cd "$(dirname "$0")/.."
+
+# Create out dir
+mkdir -p out
+
+# Enable fast HF transfers if available
+export HF_HUB_ENABLE_HF_TRANSFER=1 || true
+export TOKENIZERS_PARALLELISM=true
+
+# Basic sanity checks
+if [[ ! -f token ]]; then
+  echo "ERROR: token file not found at ./token. Create it with your HF token on a single line." >&2
+  exit 1
+fi
+
+OUT_DIR="out/${DATASET}_${MODEL}"
+LOG_FILE="run_${MODEL//\//_}.log"
+
+echo "Running experiment: model=${MODEL}, dataset=${DATASET}, target_num=${TARGET_NUM}, split=${SPLIT}"
+echo "Logs: ${LOG_FILE}"
+
+# Run
+python -u src/main.py \
+  --model "${MODEL}" \
+  --data "${DATASET}" \
+  --split "${SPLIT}" \
+  --target_num "${TARGET_NUM}" \
+  --sgd \
+  --out_dir "${OUT_DIR}" | tee -a "${LOG_FILE}"
+
+# The pipeline writes to out/results.tsv flat; organize it under the per-run folder if present
+mkdir -p "${OUT_DIR}"
+if [[ -f out/results.tsv ]]; then
+  mv -f out/results.tsv "${OUT_DIR}/results.tsv"
+fi
+
+# Scrub any HF token occurrences before sharing
+if [[ -f "${OUT_DIR}/results.tsv" ]]; then
+  sed -E "s/token='hf_[^']*'//g" -i "${OUT_DIR}/results.tsv" || true
+  echo "Results: ${OUT_DIR}/results.tsv"
+else
+  echo "WARNING: results.tsv not found; check ${LOG_FILE} for details." >&2
+fi
+
+# Optional: copy to persistent workspace if available
+if [[ -d /workspace ]]; then
+  mkdir -p /workspace/artifacts
+  if [[ -f "${OUT_DIR}/results.tsv" ]]; then
+    cp "${OUT_DIR}/results.tsv" \
+       "/workspace/artifacts/${DATASET}_${MODEL}_results.tsv"
+    echo "Copied to: /workspace/artifacts/${DATASET}_${MODEL}_results.tsv"
+  fi
+fi
+
+echo "Done."
+
+
