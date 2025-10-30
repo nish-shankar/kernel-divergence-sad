@@ -34,13 +34,31 @@ echo "Running experiment: model=${MODEL}, dataset=${DATASET}, target_num=${TARGE
 echo "Logs: ${LOG_FILE}"
 
 # Run
-python -u src/main.py \
-  --model "${MODEL}" \
-  --data "${DATASET}" \
-  --split "${SPLIT}" \
-  --target_num "${TARGET_NUM}" \
-  --sgd \
-  --out_dir "${OUT_DIR}" | tee -a "${LOG_FILE}"
+# If CONTAM is provided in environment, run a single setting; otherwise sweep 0.00 -> 1.00 by 0.05
+if [[ -n "${CONTAM:-}" ]]; then
+  echo "Single run with contamination=${CONTAM}"
+  python -u src/main.py \
+    --model "${MODEL}" \
+    --data "${DATASET}" \
+    --split "${SPLIT}" \
+    --target_num "${TARGET_NUM}" \
+    --sgd \
+    --contamination "${CONTAM}" \
+    --out_dir "${OUT_DIR}" | tee -a "${LOG_FILE}"
+else
+  echo "Sweeping contamination from 0.00 to 1.00 (step 0.05)"
+  for r in $(seq 0 0.05 1.0); do
+    echo "==> contamination=${r}"
+    python -u src/main.py \
+      --model "${MODEL}" \
+      --data "${DATASET}" \
+      --split "${SPLIT}" \
+      --target_num "${TARGET_NUM}" \
+      --sgd \
+      --contamination "${r}" \
+      --out_dir "${OUT_DIR}" | tee -a "${LOG_FILE}"
+  done
+fi
 
 # The pipeline writes to out/results.tsv flat; organize it under the per-run folder if present
 mkdir -p "${OUT_DIR}"
