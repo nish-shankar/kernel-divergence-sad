@@ -33,6 +33,18 @@ LOG_FILE="run_${MODEL//\//_}.log"
 echo "Running experiment: model=${MODEL}, dataset=${DATASET}, target_num=${TARGET_NUM}, split=${SPLIT}"
 echo "Logs: ${LOG_FILE}"
 
+# Adjust batch sizes for larger models
+if [[ "${MODEL}" == *"7b"* ]] || [[ "${MODEL}" == *"7B"* ]]; then
+  BATCH_SIZE=2
+  INFERENCE_BATCH_SIZE=8
+elif [[ "${MODEL}" == *"3b"* ]] || [[ "${MODEL}" == *"3B"* ]]; then
+  BATCH_SIZE=4
+  INFERENCE_BATCH_SIZE=16
+else
+  BATCH_SIZE=4
+  INFERENCE_BATCH_SIZE=16
+fi
+
 # Run
 # If CONTAM is provided in environment, run a single setting; otherwise sweep 0.00 -> 1.00 by 0.05
 if [[ -n "${CONTAM:-}" ]]; then
@@ -42,6 +54,8 @@ if [[ -n "${CONTAM:-}" ]]; then
     --data "${DATASET}" \
     --split "${SPLIT}" \
     --target_num "${TARGET_NUM}" \
+    --batch_size "${BATCH_SIZE}" \
+    --inference_batch_size "${INFERENCE_BATCH_SIZE}" \
     --sgd \
     --contamination "${CONTAM}" \
     --out_dir "${OUT_DIR}" | tee -a "${LOG_FILE}"
@@ -54,6 +68,8 @@ else
       --data "${DATASET}" \
       --split "${SPLIT}" \
       --target_num "${TARGET_NUM}" \
+      --batch_size "${BATCH_SIZE}" \
+      --inference_batch_size "${INFERENCE_BATCH_SIZE}" \
       --sgd \
       --contamination "${r}" \
       --out_dir "${OUT_DIR}" | tee -a "${LOG_FILE}"
