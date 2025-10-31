@@ -5,6 +5,7 @@ model_dirs = {
     'llama3.1': 'meta-llama/Meta-Llama-3.1-8B-Instruct',
     'qwen2.5-0.5b': 'Qwen/Qwen2.5-0.5B-Instruct',
     'qwen2.5-1.5b': 'Qwen/Qwen2.5-1.5B-Instruct',
+    'qwen2.5-3b': 'Qwen/Qwen2.5-3B-Instruct',
     'phi3-small': 'microsoft/Phi-3-small-128k-instruct'
 }
 
