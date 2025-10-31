@@ -18,7 +18,6 @@ def load_model(args, model_name_or_path, memory_for_model_activations_in_gb=2, p
         token=args.token,
         cache_dir=args.model_dir,
         trust_remote_code=True,
-        attn_implementation="sdpa",
     )
     model.eval()
     return model
