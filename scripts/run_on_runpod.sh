@@ -4,9 +4,9 @@ set -euo pipefail
 # Usage:
 #   bash scripts/run_on_runpod.sh [model] [dataset] [target_num] [split]
 # Defaults:
-#   model=qwen2.5-3b, dataset=stages_oversight, target_num=2000, split=train
+#   model=qwen2.5-7b, dataset=stages_oversight, target_num=2000, split=train
 
-MODEL="${1:-qwen2.5-3b}"
+MODEL="${1:-qwen2.5-7b}"
 DATASET="${2:-stages_oversight}"
 TARGET_NUM="${3:-2000}"
 SPLIT="${4:-train}"
