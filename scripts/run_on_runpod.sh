@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Usage:
-#   bash scripts/run_on_runpod.sh [model] [dataset] [target_num] [split]
-# Defaults:
-#   model=qwen2.5-7b, dataset=stages_oversight, target_num=2000, split=train
-
-MODEL="${1:-qwen2.5-7b}"
-DATASET="${2:-stages_oversight}"
-TARGET_NUM="${3:-2000}"
-SPLIT="${4:-train}"
+# Hardcoded configuration for qwen2.5-7b experiment
+MODEL="qwen2.5-7b"
+DATASET="stages_oversight"
+TARGET_NUM="2000"
+SPLIT="train"
 
 # Ensure we are at repo root
 cd "$(dirname "$0")/.."

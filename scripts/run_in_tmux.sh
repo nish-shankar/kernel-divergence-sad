@@ -15,10 +15,13 @@ if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
   tmux attach -t "$SESSION_NAME"
 else
   echo "Creating new tmux session '$SESSION_NAME'..."
+  # Get project root directory
+  PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+  LOG_FILE="${PROJECT_ROOT}/run_${MODEL//\//_}.log"
+  
   # Create new session and run the experiment
-  tmux new-session -d -s "$SESSION_NAME" -c "$(dirname "$0")/.." \
-    "cd /workspace/kernel-divergence-sad && \
-     bash scripts/run_on_runpod.sh '$MODEL' '$DATASET' '$TARGET_NUM' '$SPLIT'; \
+  tmux new-session -d -s "$SESSION_NAME" -c "$PROJECT_ROOT" \
+    "bash scripts/run_on_runpod.sh '$MODEL' '$DATASET' '$TARGET_NUM' '$SPLIT' 2>&1 | tee -a '$LOG_FILE'; \
      echo ''; \
      echo 'Experiment finished. Press any key to exit...'; \
      read"
