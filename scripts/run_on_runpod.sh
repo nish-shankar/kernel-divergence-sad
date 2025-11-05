@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Hardcoded configuration for qwen2.5-7b experiment
-MODEL="qwen2.5-7b"
+# Hardcoded configuration for qwen2.5-3b experiment
+MODEL="qwen2.5-3b"
 DATASET="stages_oversight"
 TARGET_NUM="2000"
 SPLIT="train"
