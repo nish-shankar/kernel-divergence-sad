@@ -76,20 +76,6 @@ nvidia-smi
 
 ### 8. Run Experiment in TMUX
 
-**For Qwen 2.5 3B model (default):**
-```bash
-# Run Experiment in TMUX (just activate conda, script handles the rest)
-tmux new -s qwen3b -d "bash -c '
-  eval \"\$(/root/miniconda3/bin/conda shell.bash hook)\"
-  cd /workspace/kernel-divergence-sad
-  conda activate kds
-  bash scripts/run_on_runpod.sh
-'"
-
-# Attach to tmux session
-tmux attach -t qwen3b
-```
-
 **For Qwen 2.5 0.5B model:**
 ```bash
 # Run Experiment in TMUX with 0.5B model
@@ -102,6 +88,20 @@ tmux new -s qwen0.5b -d "bash -c '
 
 # Attach to tmux session
 tmux attach -t qwen0.5b
+```
+
+**For Qwen 2.5 3B model (default):**
+```bash
+# Run Experiment in TMUX (just activate conda, script handles the rest)
+tmux new -s qwen3b -d "bash -c '
+  eval \"\$(/root/miniconda3/bin/conda shell.bash hook)\"
+  cd /workspace/kernel-divergence-sad
+  conda activate kds
+  bash scripts/run_on_runpod.sh
+'"
+
+# Attach to tmux session
+tmux attach -t qwen3b
 ```
 
 **For other models:**
@@ -119,11 +119,25 @@ tmux attach -t qwen7b
 
 ## Configuration
 
-The experiment configuration is set in `scripts/run_on_runpod.sh`:
+The experiment configuration can be set via command line arguments:
 - `MODEL`: Model to use (default: `qwen2.5-3b`)
 - `DATASET`: Dataset name (default: `stages_oversight`)
 - `TARGET_NUM`: Number of samples (default: `600`)
 - `SPLIT`: Data split (default: `train`)
+
+**Usage:**
+```bash
+bash scripts/run_on_runpod.sh [model] [dataset] [target_num] [split]
+```
+
+**Examples:**
+```bash
+# Qwen 2.5 0.5B with default settings
+bash scripts/run_on_runpod.sh qwen2.5-0.5b
+
+# Qwen 2.5 3B with custom target_num
+bash scripts/run_on_runpod.sh qwen2.5-3b stages_oversight 600 train
+```
 
 ## Results
 
@@ -142,5 +156,12 @@ To detach without stopping the experiment:
 
 To reattach later:
 ```bash
-tmux attach -t qwen3b
+tmux attach -t qwen0.5b  # or qwen3b, qwen7b, etc.
 ```
+
+## Model-Specific Batch Sizes
+
+The script automatically adjusts batch sizes based on model size:
+- **0.5B/1.5B models**: `batch_size=8`, `inference_batch_size=32`
+- **3B models**: `batch_size=4`, `inference_batch_size=16`
+- **7B+ models**: `batch_size=2`, `inference_batch_size=8`
