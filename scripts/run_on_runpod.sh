@@ -18,6 +18,8 @@ mkdir -p out
 # Enable fast HF transfers if available
 export HF_HUB_ENABLE_HF_TRANSFER=1 || true
 export TOKENIZERS_PARALLELISM=true
+# PyTorch memory management to avoid fragmentation
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 # Basic sanity checks
 if [[ ! -f token ]]; then
@@ -40,7 +42,7 @@ elif [[ "${MODEL}" == *"3b"* ]] || [[ "${MODEL}" == *"3B"* ]]; then
   INFERENCE_BATCH_SIZE=16
 elif [[ "${MODEL}" == *"0.5b"* ]] || [[ "${MODEL}" == *"0.5B"* ]] || [[ "${MODEL}" == *"1.5b"* ]] || [[ "${MODEL}" == *"1.5B"* ]]; then
   BATCH_SIZE=8
-  INFERENCE_BATCH_SIZE=32
+  INFERENCE_BATCH_SIZE=16  # Original default batch size (safe and faster than 4)
 else
   BATCH_SIZE=4
   INFERENCE_BATCH_SIZE=16
