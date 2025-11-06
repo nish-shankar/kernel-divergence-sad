@@ -37,8 +37,32 @@ def get_data_subsets(args, dataset):
     in_dataset = Dataset.from_dict(dataset[[idx for idx, x in enumerate(dataset['label']) if x==1]])
     out_dataset = Dataset.from_dict(dataset[[idx for idx, x in enumerate(dataset['label']) if x==0]])
     
+    # Get actual available samples
+    max_in_samples = len(in_dataset)
+    max_out_samples = len(out_dataset)
+    
     in_num = int(args.target_num * args.contamination)
     out_num = args.target_num - in_num
+
+    # Clamp to available samples (matching old behavior exactly)
+    # Old code silently used min(requested, available) via Python slicing
+    # This just makes it explicit and adds warnings
+    original_in_num = in_num
+    original_out_num = out_num
+    
+    # Match old behavior: Python slicing returns min(requested, available)
+    actual_in = min(in_num, max_in_samples)
+    actual_out = min(out_num, max_out_samples)
+    
+    # Only warn if we're hitting limits
+    if in_num > max_in_samples:
+        print(f"WARNING: Requested {in_num} seen samples but only {max_in_samples} available. Using {actual_in} seen samples.")
+    if out_num > max_out_samples:
+        print(f"WARNING: Requested {out_num} unseen samples but only {max_out_samples} available. Using {actual_out} unseen samples.")
+    
+    # Use the actual values (matching old slicing behavior)
+    in_num = actual_in
+    out_num = actual_out
 
     in_data_subset = Dataset.from_dict(in_dataset[:in_num])
     out_data_subset = Dataset.from_dict(out_dataset[:out_num])

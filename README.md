@@ -1,71 +1,146 @@
-# Kernel Divergence Score
+# Kernel Divergence Score Experiment
 
-An altered implementation of ICML 2025 paper, "[How Contaminated Is Your Benchmark? Measuring Dataset Leakage in Large Language Models with Kernel Divergence](https://arxiv.org/abs/2502.00678)" by Hyeong Kyu Choi*, Maxim Khanov*, Hongxin Wei, and Yixuan Li (with edits made by Nishith Shankar).
+Run KDS experiments for Qwen models on stages_oversight dataset.
 
-## Setup Environment
+## Quick Start
+
+### 1. Initialize Conda
+
+```bash
+# Download Miniconda installer
+cd /tmp
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+
+# Install Miniconda (silent mode, to /root/miniconda3)
+bash Miniconda3-latest-Linux-x86_64.sh -b -p /root/miniconda3
+
+# Initialize conda
+eval "$(/root/miniconda3/bin/conda shell.bash hook)"
+
+# Verify installation
+conda --version
+
+# Clean up installer
+rm Miniconda3-latest-Linux-x86_64.sh
 ```
+
+### 2. Install TMUX
+
+```bash
+apt-get update
+apt-get install -y tmux
+```
+
+### 3. Clone Repository
+
+```bash
+cd /workspace
 git clone https://github.com/nish-shankar/kernel-divergence-sad.git
 cd kernel-divergence-sad
+
+# Pull latest changes (to get the updated script)
+git pull origin main
 ```
 
-```
-conda env create -f environment.yml
+### 4. Create Conda Environment
+
+```bash
+# Create Conda Environment (installs all dependencies from environment.yml)
+conda env create -f environment.yml -y
+
+# Activate Environment
 conda activate kds
+
+# Install hf_transfer (only missing dependency)
+pip install hf_transfer
 ```
 
-Finally, create a "token" file right outside the ```src/``` directory (note that there shouldn't be any extension in the file name), containing your huggingface credential token.
+### 5. Set Up Hugging Face Token
 
-
-## Experiments
-
-Experiment commands are in ```scripts/```. Each shell file computes the kernel divergence scores for contamination rate 0.0~1.0 on seed 0.
-
-```
-sh scripts/wikimia.sh
+```bash
+# Set Up Hugging Face Token (REPLACE YOUR_TOKEN!)
+echo -n "hf_YOUR_TOKEN_HERE" > token
 ```
 
+### 6. Make Scripts Executable
 
-```
-sh scripts/bookmia.sh
-```
-
-```
-sh scripts/arxivtection.sh
+```bash
+chmod +x scripts/*.sh
 ```
 
-```
-sh scripts/pile.sh
-```
+### 7. Verify GPU
 
-
-## SAD (Situational Awareness Dataset) Usage
-
-1. Prepare your data file at `<data_dir>/sad.csv` with columns:
-   - `input`: text prompt/question
-   - `label`: 1 (for single-benchmark KDS; optional; defaults to 1)
-
-2. Run with Llama 3.1 Instruct 8B (or any allowed model allowed in the codebase):
-```
-python src/main.py \
-  --data sad \
-  --model llama3.1 \
-  --data_dir /ABSOLUTE/PATH/TO/SAD_DIR \
-  --target_num 1000 \
-  --contamination 1.0 \
-  --sgd \
-  --lr 0.0001 \
-  --seed 0
+```bash
+nvidia-smi
 ```
 
-3. Results are written to `out/results.tsv` with a row ending `_KDS` that contains the Kernel Divergence Score.
+### 8. Run Experiment in TMUX
 
+**For Qwen 2.5 3B model (default):**
+```bash
+# Run Experiment in TMUX (just activate conda, script handles the rest)
+tmux new -s qwen3b -d "bash -c '
+  eval \"\$(/root/miniconda3/bin/conda shell.bash hook)\"
+  cd /workspace/kernel-divergence-sad
+  conda activate kds
+  bash scripts/run_on_runpod.sh
+'"
 
-## Citation
+# Attach to tmux session
+tmux attach -t qwen3b
 ```
-@inproceedings{choi2024beyond,
-      title={How Contaminated Is Your Benchmark? Measuring Dataset Leakage in Large Language Models with Kernel Divergence}, 
-      author={Hyeong Kyu Choi and Maxim Khanov and Hongxin Wei and Yixuan Li},
-      booktitle = {International Conference on Machine Learning},
-      year = {2025}
-}
+
+**For Qwen 2.5 0.5B model:**
+```bash
+# Run Experiment in TMUX with 0.5B model
+tmux new -s qwen0.5b -d "bash -c '
+  eval \"\$(/root/miniconda3/bin/conda shell.bash hook)\"
+  cd /workspace/kernel-divergence-sad
+  conda activate kds
+  bash scripts/run_on_runpod.sh qwen2.5-0.5b
+'"
+
+# Attach to tmux session
+tmux attach -t qwen0.5b
+```
+
+**For other models:**
+```bash
+# Usage: bash scripts/run_on_runpod.sh [model] [dataset] [target_num] [split]
+# Example for Qwen 2.5 7B:
+tmux new -s qwen7b -d "bash -c '
+  eval \"\$(/root/miniconda3/bin/conda shell.bash hook)\"
+  cd /workspace/kernel-divergence-sad
+  conda activate kds
+  bash scripts/run_on_runpod.sh qwen2.5-7b
+'"
+tmux attach -t qwen7b
+```
+
+## Configuration
+
+The experiment configuration is set in `scripts/run_on_runpod.sh`:
+- `MODEL`: Model to use (default: `qwen2.5-3b`)
+- `DATASET`: Dataset name (default: `stages_oversight`)
+- `TARGET_NUM`: Number of samples (default: `600`)
+- `SPLIT`: Data split (default: `train`)
+
+## Results
+
+Results are written to `out/{dataset}_{model}/results.tsv`
+
+Each row contains:
+- Timestamp
+- Experiment identifier (includes contamination rate)
+- KDS score
+- Full experiment arguments
+
+## Detaching from TMUX
+
+To detach without stopping the experiment:
+- Press `Ctrl+B`, then `D`
+
+To reattach later:
+```bash
+tmux attach -t qwen3b
 ```

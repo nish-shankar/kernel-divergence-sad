@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Hardcoded configuration for qwen2.5-3b experiment
-MODEL="qwen2.5-3b"
-DATASET="stages_oversight"
-TARGET_NUM="2000"
-SPLIT="train"
+# Configuration - can be overridden via command line arguments
+# Usage: bash scripts/run_on_runpod.sh [model] [dataset] [target_num] [split]
+# Default: qwen2.5-3b stages_oversight 600 train
+MODEL="${1:-qwen2.5-3b}"
+DATASET="${2:-stages_oversight}"
+TARGET_NUM="${3:-600}"  # Set to match available samples: 37 seen + 563 unseen = 600 total
+SPLIT="${4:-train}"
 
 # Ensure we are at repo root
 cd "$(dirname "$0")/.."
@@ -29,13 +31,16 @@ LOG_FILE="run_${MODEL//\//_}.log"
 echo "Running experiment: model=${MODEL}, dataset=${DATASET}, target_num=${TARGET_NUM}, split=${SPLIT}"
 echo "Logs: ${LOG_FILE}"
 
-# Adjust batch sizes for larger models
+# Adjust batch sizes based on model size
 if [[ "${MODEL}" == *"7b"* ]] || [[ "${MODEL}" == *"7B"* ]]; then
   BATCH_SIZE=2
   INFERENCE_BATCH_SIZE=8
 elif [[ "${MODEL}" == *"3b"* ]] || [[ "${MODEL}" == *"3B"* ]]; then
   BATCH_SIZE=4
   INFERENCE_BATCH_SIZE=16
+elif [[ "${MODEL}" == *"0.5b"* ]] || [[ "${MODEL}" == *"0.5B"* ]] || [[ "${MODEL}" == *"1.5b"* ]] || [[ "${MODEL}" == *"1.5B"* ]]; then
+  BATCH_SIZE=8
+  INFERENCE_BATCH_SIZE=32
 else
   BATCH_SIZE=4
   INFERENCE_BATCH_SIZE=16
