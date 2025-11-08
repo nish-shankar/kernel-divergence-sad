@@ -32,7 +32,7 @@ class PhiWrapper(object):
     def __call__(self, batch, output_log_likelihood=True, output_hidden_states=False, hidden_states_layers_to_output=(-1, -.5), output_only_last_token_hidden_states=False):
         with torch.no_grad():
             input_ids_cuda = batch['input_ids'].cuda()
-            model_output = self.huggingface_model(input_ids=input_ids_cuda, attention_mask=batch['attention_mask'].cuda(), output_hidden_states=output_hidden_states)
+            model_output = self.huggingface_model(input_ids=input_ids_cuda, attention_mask=batch['attention_mask'].cuda(), output_hidden_states=output_hidden_states, use_cache=False)
             
             logits_before_softmax = model_output['logits'].float()[:, :-1, :]
             next_token_logit = model_output['logits'].float()[:, -1:, :]
