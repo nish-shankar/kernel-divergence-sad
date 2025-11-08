@@ -49,6 +49,9 @@ elif [[ "${MODEL}" == *"1.5b"* ]] || [[ "${MODEL}" == *"1.5B"* ]]; then
 elif [[ "${MODEL}" == *"0.27b"* ]] || [[ "${MODEL}" == *"0.27B"* ]] || [[ "${MODEL}" == *"270m"* ]] || [[ "${MODEL}" == *"270M"* ]]; then
   BATCH_SIZE=8  # Similar to 0.5B model
   INFERENCE_BATCH_SIZE=32  # Increased from 8 to 32 for faster embedding extraction (270M model is small)
+elif [[ "${MODEL}" == *"1b"* ]] || [[ "${MODEL}" == *"1B"* ]] || [[ "${MODEL}" == *"1.1b"* ]] || [[ "${MODEL}" == *"1.1B"* ]]; then
+  BATCH_SIZE=4  # Similar to 1.5B model
+  INFERENCE_BATCH_SIZE=16  # Good balance for 1B model
 elif [[ "${MODEL}" == *"gemma"* ]] || [[ "${MODEL}" == *"Gemma"* ]]; then
   # Default Gemma batch sizes (fallback for other Gemma sizes)
   BATCH_SIZE=4
