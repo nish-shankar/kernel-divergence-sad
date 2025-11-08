@@ -146,7 +146,6 @@ dependencies:
       - urllib3==2.0.7
       - wandb==0.15.12
       - wheel==0.45.1
-      - xformers==0.0.22.post7
       - xxhash==3.4.1
       - yarg==0.1.9
       - yarl==1.9.2
