@@ -48,6 +48,7 @@ def train_model(args, model, dataset):
     targeted_modules_exceptions = {
         "phi3-small": ["query_key_value"],
         "phi3-medium": ["qkv_proj"],
+        "phi-3-mini-4k-instruct": ["qkv_proj"],  # Phi-3-mini uses qkv_proj like phi3-medium
         "internlm": ["wqkv"],
         "bloomz": ["query_key_value"],
     }.get(args.model, ["q_proj", "v_proj"])
