@@ -37,6 +37,9 @@ echo "Logs: ${LOG_FILE}"
 if [[ "${MODEL}" == *"7b"* ]] || [[ "${MODEL}" == *"7B"* ]]; then
   BATCH_SIZE=2
   INFERENCE_BATCH_SIZE=8
+elif [[ "${MODEL}" == *"4b"* ]] || [[ "${MODEL}" == *"4B"* ]]; then
+  BATCH_SIZE=2  # Similar to 7B model, but slightly more conservative
+  INFERENCE_BATCH_SIZE=8
 elif [[ "${MODEL}" == *"3b"* ]] || [[ "${MODEL}" == *"3B"* ]]; then
   BATCH_SIZE=4
   INFERENCE_BATCH_SIZE=16

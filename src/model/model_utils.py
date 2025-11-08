@@ -11,7 +11,8 @@ model_dirs = {
     'gemma-3-0.27b-it': 'google/gemma-3-270m-it',
     'gemma-3-270m-it': 'google/gemma-3-270m-it',
     'gemma-3-1b-it': 'google/gemma-3-1b-it',
-    'gemma-3-1.1b-it': 'google/gemma-3-1.1b-it'
+    'gemma-3-1.1b-it': 'google/gemma-3-1.1b-it',
+    'gemma-3-4b-it': 'google/gemma-3-4b-it'
 }
 
 
@@ -35,7 +36,7 @@ def load_model(args, model_name=None, peft_path=None):
     elif model_name in ["qwen2.5-0.5b", "qwen2.5-1.5b", "qwen2.5-3b", "qwen2.5-7b", "qwen2.5-14b", "qwen2.5-32b", "qwen2.5-72b"] :
         from model.qwen import QwenWrapper
         return QwenWrapper(args, model_dirs[model_name], memory_for_model_activations_in_gb=args.memory_for_model_activations_in_gb, lora_adapter_path=peft_path)
-    elif model_name in ["gemma-3-0.27b-it", "gemma-3-270m-it", "gemma-3-1b-it", "gemma-3-1.1b-it"] :
+    elif model_name in ["gemma-3-0.27b-it", "gemma-3-270m-it", "gemma-3-1b-it", "gemma-3-1.1b-it", "gemma-3-4b-it"] :
         from model.gemma import GemmaWrapper
         return GemmaWrapper(args, model_dirs[model_name], memory_for_model_activations_in_gb=args.memory_for_model_activations_in_gb, lora_adapter_path=peft_path)
     else:
