@@ -40,6 +40,9 @@ if [[ "${MODEL}" == *"7b"* ]] || [[ "${MODEL}" == *"7B"* ]]; then
 elif [[ "${MODEL}" == *"4b"* ]] || [[ "${MODEL}" == *"4B"* ]]; then
   BATCH_SIZE=2  # Similar to 7B model, but slightly more conservative
   INFERENCE_BATCH_SIZE=8
+elif [[ "${MODEL}" == *"phi-3-mini"* ]] || [[ "${MODEL}" == *"Phi-3-mini"* ]]; then
+  BATCH_SIZE=4  # Phi-3-mini is ~3.8B parameters, similar to 3B models
+  INFERENCE_BATCH_SIZE=16
 elif [[ "${MODEL}" == *"3b"* ]] || [[ "${MODEL}" == *"3B"* ]]; then
   BATCH_SIZE=4
   INFERENCE_BATCH_SIZE=16

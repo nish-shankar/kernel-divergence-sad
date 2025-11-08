@@ -8,6 +8,7 @@ model_dirs = {
     'qwen2.5-3b': 'Qwen/Qwen2.5-3B-Instruct',
     'qwen2.5-7b': 'Qwen/Qwen2.5-7B-Instruct',
     'phi3-small': 'microsoft/Phi-3-small-128k-instruct',
+    'phi-3-mini-4k-instruct': 'microsoft/Phi-3-mini-4k-instruct',
     'gemma-3-0.27b-it': 'google/gemma-3-270m-it',
     'gemma-3-270m-it': 'google/gemma-3-270m-it',
     'gemma-3-1b-it': 'google/gemma-3-1b-it',
@@ -30,7 +31,7 @@ def load_model(args, model_name=None, peft_path=None):
         elif model_name in ['llama2-70b-chat', 'llama2-13b-chat', 'llama2-7b-chat']:
             lversion = 2
         return LlamaWrapper(args, model_dirs[model_name], memory_for_model_activations_in_gb=args.memory_for_model_activations_in_gb, lora_adapter_path=peft_path, llama_version=lversion)
-    elif model_name in ["phi3-small", "phi3-medium"] :
+    elif model_name in ["phi3-small", "phi3-medium", "phi-3-mini-4k-instruct"] :
         from model.phi import PhiWrapper
         return PhiWrapper(args, model_dirs[model_name], memory_for_model_activations_in_gb=args.memory_for_model_activations_in_gb, lora_adapter_path=peft_path)
     elif model_name in ["qwen2.5-0.5b", "qwen2.5-1.5b", "qwen2.5-3b", "qwen2.5-7b", "qwen2.5-14b", "qwen2.5-32b", "qwen2.5-72b"] :
