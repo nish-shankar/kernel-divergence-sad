@@ -137,7 +137,7 @@ dependencies:
       - tomli==2.2.1
       - torch==2.1.0
       - tqdm==4.66.5
-      - transformers==4.44.2
+      - transformers==4.46.3
       - triton==2.1.0
       - trl==0.7.2
       - typing-extensions==4.8.0
