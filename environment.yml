@@ -29,7 +29,7 @@ dependencies:
       - astunparse==1.6.3
       - async-timeout==4.0.3
       - attrs==23.1.0
-      - bitsandbytes==0.40.2
+      - bitsandbytes>=0.43.0
       - bleurt-pytorch==0.0.1
       - certifi==2023.7.22
       - charset-normalizer==3.3.2
