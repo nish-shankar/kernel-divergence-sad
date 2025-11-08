@@ -12,7 +12,7 @@ dependencies:
   - libstdcxx-ng=11.2.0=h1234567_1
   - ncurses=6.4=h6a678d5_0
   - openssl=3.0.11=h7f8727e_2
-  - python=3.8.18=h955ad1f_0
+  - python=3.9.18
   - readline=8.2=h5eee18b_0
   - sqlite=3.41.2=h5eee18b_0
   - tk=8.6.12=h1ccaba5_0
