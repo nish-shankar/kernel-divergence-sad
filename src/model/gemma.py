@@ -61,7 +61,7 @@ class GemmaWrapper(object):
                         layer_idx = len(model_output.hidden_states) // 2
                     current_layer_hidden_states = model_output.hidden_states[layer_idx].cpu()
                     if output_only_last_token_hidden_states:
-                        current_layer_hidden_states = gather_last_token(current_layer_hidden_states, batch['length'])
+                        current_layer_hidden_states = gather_last_token(current_layer_hidden_states)
                     hidden_states_results.append(current_layer_hidden_states)
                 hidden_states_results = tuple(hidden_states_results)
             else:
