@@ -48,7 +48,7 @@ elif [[ "${MODEL}" == *"1.5b"* ]] || [[ "${MODEL}" == *"1.5B"* ]]; then
   INFERENCE_BATCH_SIZE=8
 elif [[ "${MODEL}" == *"1b"* ]] || [[ "${MODEL}" == *"1B"* ]] || [[ "${MODEL}" == *"1.1b"* ]] || [[ "${MODEL}" == *"1.1B"* ]]; then
   BATCH_SIZE=4  # Similar to 1.5B model
-  INFERENCE_BATCH_SIZE=8  # Reduced from 16 to 8 to avoid OOM during embedding extraction
+  INFERENCE_BATCH_SIZE=4  # Reduced from 8 to 4 to avoid OOM (only 16GB free GPU memory)
 elif [[ "${MODEL}" == *"0.27b"* ]] || [[ "${MODEL}" == *"0.27B"* ]] || [[ "${MODEL}" == *"270m"* ]] || [[ "${MODEL}" == *"270M"* ]]; then
   BATCH_SIZE=8  # Similar to 0.5B model
   INFERENCE_BATCH_SIZE=32  # Increased from 8 to 32 for faster embedding extraction (270M model is small)
