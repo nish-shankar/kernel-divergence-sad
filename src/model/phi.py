@@ -25,6 +25,8 @@ class PhiWrapper(object):
         super(PhiWrapper, self).__init__()
         self.name = model_dir
         self.huggingface_model = load_model(args, model_dir, memory_for_model_activations_in_gb, lora_adapter_path)
+        # Disable caching to avoid DynamicCache compatibility issues
+        self.huggingface_model.config.use_cache = False
         self.tokenizer = AutoTokenizer.from_pretrained(model_dir, token=args.token, trust_remote_code=True)
         self.tokenizer.pad_token = self.tokenizer.eos_token
         self.tokenizer.padding_side = 'left'
