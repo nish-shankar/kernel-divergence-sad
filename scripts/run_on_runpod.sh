@@ -40,9 +40,12 @@ if [[ "${MODEL}" == *"7b"* ]] || [[ "${MODEL}" == *"7B"* ]]; then
 elif [[ "${MODEL}" == *"3b"* ]] || [[ "${MODEL}" == *"3B"* ]]; then
   BATCH_SIZE=4
   INFERENCE_BATCH_SIZE=16
-elif [[ "${MODEL}" == *"0.5b"* ]] || [[ "${MODEL}" == *"0.5B"* ]] || [[ "${MODEL}" == *"1.5b"* ]] || [[ "${MODEL}" == *"1.5B"* ]]; then
+elif [[ "${MODEL}" == *"0.5b"* ]] || [[ "${MODEL}" == *"0.5B"* ]]; then
   BATCH_SIZE=8
-  INFERENCE_BATCH_SIZE=16  # Original default batch size (safe and faster than 4)
+  INFERENCE_BATCH_SIZE=8  # Reduced to 8 for limited VRAM (14GB free) - safer than 16
+elif [[ "${MODEL}" == *"1.5b"* ]] || [[ "${MODEL}" == *"1.5B"* ]]; then
+  BATCH_SIZE=4  # Reduced from 8 to 4 to avoid OOM
+  INFERENCE_BATCH_SIZE=8
 else
   BATCH_SIZE=4
   INFERENCE_BATCH_SIZE=16
