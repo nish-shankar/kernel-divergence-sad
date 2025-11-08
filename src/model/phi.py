@@ -11,7 +11,7 @@ from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer, DataCo
 
 def load_model(args, model_name_or_path, memory_for_model_activations_in_gb=2, peft_path=None):
     config = AutoConfig.from_pretrained(model_name_or_path, token=args.token, trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained(model_name_or_path, torch_dtype=torch.bfloat16, device_map="auto", token=args.token, cache_dir=args.model_dir, trust_remote_code=True, attn_implementation="flash_attention_2")
+    model = AutoModelForCausalLM.from_pretrained(model_name_or_path, torch_dtype=torch.bfloat16, device_map="auto", token=args.token, cache_dir=args.model_dir, trust_remote_code=True, attn_implementation="eager")
     return model
 
 
