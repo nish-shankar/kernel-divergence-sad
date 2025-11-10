@@ -37,6 +37,9 @@ echo "Logs: ${LOG_FILE}"
 if [[ "${MODEL}" == *"32b"* ]] || [[ "${MODEL}" == *"32B"* ]]; then
   BATCH_SIZE=1  # Very large model, use minimal batch size
   INFERENCE_BATCH_SIZE=4  # Conservative inference batch size for 32B model
+elif [[ "${MODEL}" == *"12b"* ]] || [[ "${MODEL}" == *"12B"* ]]; then
+  BATCH_SIZE=1  # Large model, use minimal batch size
+  INFERENCE_BATCH_SIZE=4  # Conservative inference batch size for 12B model
 elif [[ "${MODEL}" == *"7b"* ]] || [[ "${MODEL}" == *"7B"* ]]; then
   BATCH_SIZE=2
   INFERENCE_BATCH_SIZE=8
