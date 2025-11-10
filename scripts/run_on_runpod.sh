@@ -34,7 +34,10 @@ echo "Running experiment: model=${MODEL}, dataset=${DATASET}, target_num=${TARGE
 echo "Logs: ${LOG_FILE}"
 
 # Adjust batch sizes based on model size
-if [[ "${MODEL}" == *"7b"* ]] || [[ "${MODEL}" == *"7B"* ]]; then
+if [[ "${MODEL}" == *"32b"* ]] || [[ "${MODEL}" == *"32B"* ]]; then
+  BATCH_SIZE=1  # Very large model, use minimal batch size
+  INFERENCE_BATCH_SIZE=4  # Conservative inference batch size for 32B model
+elif [[ "${MODEL}" == *"7b"* ]] || [[ "${MODEL}" == *"7B"* ]]; then
   BATCH_SIZE=2
   INFERENCE_BATCH_SIZE=8
 elif [[ "${MODEL}" == *"4b"* ]] || [[ "${MODEL}" == *"4B"* ]]; then
