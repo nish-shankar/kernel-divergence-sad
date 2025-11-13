@@ -49,6 +49,9 @@ elif [[ "${MODEL}" == *"7b"* ]] || [[ "${MODEL}" == *"7B"* ]]; then
 elif [[ "${MODEL}" == *"4b"* ]] || [[ "${MODEL}" == *"4B"* ]]; then
   BATCH_SIZE=2  # Similar to 7B model, but slightly more conservative
   INFERENCE_BATCH_SIZE=8
+elif [[ "${MODEL}" == *"phi-3-medium"* ]] || [[ "${MODEL}" == *"Phi-3-medium"* ]]; then
+  BATCH_SIZE=1  # Phi-3-medium is 14B parameters, use conservative batch size
+  INFERENCE_BATCH_SIZE=4  # Conservative inference batch size for 14B model
 elif [[ "${MODEL}" == *"phi-3-mini"* ]] || [[ "${MODEL}" == *"Phi-3-mini"* ]]; then
   BATCH_SIZE=2  # Reduced from 4 to 2 to avoid OOM during training (Phi-3-mini is ~3.8B parameters)
   INFERENCE_BATCH_SIZE=8  # Reduced from 16 to 8 to be safer
